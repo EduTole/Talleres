@@ -1,0 +1,829 @@
+\documentclass[9pt]{beamer}
+
+\usepackage{mathpazo}
+%\usetheme{Singapore}
+\usetheme{default}
+%\usetheme[progressbar]{Boadilla}
+%\usecolortheme{spruce} % Beamer color theme
+%\setbeamercovered{transparent}
+\usepackage{tikz}
+%\setbeamertemplate{background}{\begin{tikzpicture} \includegraphics[width=\paperwidth,height=\paperheight]{../Imagen/usmp}
+%\end{tikzpicture}
+%}
+
+\setbeamertemplate{background}{
+\begin{tikzpicture}
+\ifnum\thepage>1\relax%
+% background for pages > 1 
+	\fill[white,opacity=1] (0,0) rectangle(\the\paperwidth,\the\paperheight);
+\else 
+  % background for the title page
+  \useasboundingbox (0,0) rectangle(\the\paperwidth,\the\paperheight );
+  
+
+  % background image
+  \node[inner sep=0.5pt] (logo) at (.5\paperwidth,0.5\paperheight){\includegraphics[width=\paperwidth]{../Imagen/upn1}};
+
+  % logo
+%  \node[inner sep=0pt] (logo) at (\paperwidth-1.7cm,\paperheight-2cm){\includegraphics[width=1.6cm]{../Imagen/usmp2.png}};
+
+  % line between institute and author
+    %\fill[color=white] (0,7.1) rectangle(\the\paperwidth,7.15);  
+
+\fi
+\ifdefined\DEBUG
+	\draw[help lines,xstep=1,ystep=1,gray] (current page.south west) grid (current page.north east);
+\fi
+\end{tikzpicture}
+}
+
+
+\usepackage{textpos} 
+\usepackage{stata}
+
+
+\addtobeamertemplate{frametitle}{}{%
+    \begin{textblock*}{100mm}(.85\textwidth,-0.5cm)
+        \includegraphics[height=1cm,width=0.6cm]{../Imagen/taller1.png}
+    \end{textblock*}}
+    
+\usepackage[spanish]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{threeparttable}
+\spanishdecimal{.}
+\usepackage{latexsym,amsmath,amssymb} % S\'imbolos
+\newtheorem{Teorema}{Teorema}
+\newtheorem{Ejemplo}{Ejemplo}
+\newtheorem{Definicion}{Definición}
+\newtheorem{Corolario}{Corolario}
+\newtheorem{Prueba}{Prueba}
+\usepackage[pdftex]{graphicx}	% Inclusión de imágenes
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{graphicx}		% Inclusión de imágenes
+\usepackage[framed,numbered]{mcode}
+\usepackage{booktabs}
+\setbeamertemplate{title page}[default][left]
+
+\beamertemplatenavigationsymbolsempty 
+
+\AtBeginSection[ ]
+{
+\begin{frame}
+\frametitle{Roadmap}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+
+\begin{document}
+
+
+\title[Econometría]{\textcolor{black}{Taller de \texttt{R} Studio\\  Aplicaci\'{o}n \\ Modelos Lineales} \\}
+\author[Edinson Tolentino]{\textcolor{black}{Edinson Tolentino \\ \tiny email: edinson.tolentino@gmail.com \\ \tiny Twitter:  @edutoleraymondi}} \\
+\institute[Educate]{\small \textcolor{black}{Educate Peru}}\\
+
+\date{\textcolor{black}{\today}}
+
+
+\frame{\titlepage} 
+
+\frame{\frametitle{Contenido}\tableofcontents} 
+
+\section{Introducción}
+
+\frame{\frametitle{Introducción}
+
+\begin{itemize}
+\pause
+\item Jacob Mincer publico su libro ``Schooling, Experience and Earnings'' (1974)
+\pause
+\item Mincer modelo el logaritmo de ingresos como una funcion de a\~{n}os de educacion y a\~{n}os potenciales de experiencia en el mercado laboral 
+
+%\pause
+\item Por lo tanto, la ecuaci\'{o}n de Mincer sera:
+
+\begin{align*}
+%& & \log w_{x} = X \beta +rs + rh_{0}x - r\left( \frac{h_{0}}{2T}\right) x^{2}+ \log (1- h_{x}) & & (2) \\
+& & \log w_{x} = X \beta +r Sch + \beta_{1}Exp - \beta_{2} Exp^{2} & &  \\
+\end{align*}
+
+
+\end{itemize}
+}
+
+\frame{\frametitle{Introducción}
+
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=5cm,width=8cm]{../Imagen/Seminario_1.png}
+	\end{center}
+	\end{figure}
+
+\begin{itemize}
+\pause
+\item La consultora \textbf{Marilyn Loden} , quien acuñó el termino \textbf{techo de cristal} en 1978 , es también la autora del libro Liderazgo femenino o ¿cómo triunfar en los negocios sin ser uno de los chicos?.	
+
+\end{itemize}	
+}
+
+\frame{\frametitle{Introducción}
+
+\begin{itemize}
+\pause
+\item En 1991, la Comisión de \textbf{Techos de Vidrio (glass ceiling)} del Departamento de Trabajo de EE. UU. (1991-1996) definió el \textbf{techo de vidrio} como:
+
+\pause
+\item $\cdots$ esas barreras artificiales basadas en prejuicios organizacionales o de actitud que impiden que las personas calificadas asciendan en su organización a puestos de nivel gerencial.
+ 
+\pause 
+\item El concepto de \textbf{techo de cristal} se convirtió en el objeto de un estudio de investigación sistemático desde finales de los años ochenta. 
+ 
+\pause
+\item Los sociólogos estuvieron a la vanguardia de las primeras investigaciones y (algunos) economistas se interesaron a fines de la década de 1990.
+
+\pause  
+\item El enfoque original de los economistas en esta área era la promoción, no el pago.
+
+\pause
+\item  A principios de la década de 2000, las regresiones cuantílicas se utilizaban de forma rutinaria en esta investigación para centrarse en la remuneración.
+\end{itemize}
+
+}
+
+\frame{\frametitle{Introducción}
+
+\begin{columns}
+	\begin{column}{0.48\textwidth}
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=6cm,width=5cm]{../Imagen/Seminario_2.png}
+	\end{center}
+	\end{figure}
+
+%	\lstinputlisting[caption={\mcode{Dofile.do}},firstline=6, lastline=19]{../Sesion1/Session-1-Enaho.do}
+
+	\end{column}
+    \begin{column}{0.58\textwidth}
+   
+	\begin{itemize}
+	\pause
+
+	\item La socióloga Catherine Berheide, quien acuñó la frase \textbf{piso pegajoso} (sticky floor) en 1992
+	\pause
+
+	\item El \textbf{piso pegajoso} se refiere a los casos en los que las mujeres ocupan puestos de baja categoría, bajos salarios y de baja movilidad en el mercado laboral.
+	
+	\pause
+
+	\item Donde se dice:
+	\pause
+
+	\item $\cdots$ la mayoría de las mujeres deberían tener la suerte de tener el techo de cristal como su problema $\cdots$ .muchas están atascadas en el piso pegajoso.
+	\end{itemize}
+ 
+    \end{column}
+\end{columns}
+
+}
+
+\frame{\frametitle{Introducción}
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=7cm,width=8cm]{../Imagen/Seminario_3.png}
+	\end{center}
+	\end{figure}
+
+}
+
+\section{Data y Variables}
+\frame{\frametitle{Descripción de Información}
+
+\begin{itemize}
+ 
+\item  La información que se utilizará es proveniente de la base de datos de la Encuesta Nacional de Hogares (ENAHO). Se procesa la base de datos del modulo 300 y 500 donde se analizará los ingresos mensuales de los trabajadores. 
+
+\input{../Tablas/T_2_stata.tex}
+
+%Dada la informaci\'{o}n de la data \textbf{exercise 1.dta} contiene información de 9 variables para 7,004 trabajadores de Pakistan seg\'{u}n la fuerza de trabajo del 2007. El siguiente cuadro, describe las definiciones de las variables que se observan en la data.
+
+% \begin{figure}[h]
+% \begin{center}
+% \includegraphics [height=3.5cm,width=12cm]{../Imagen/T1.png}
+% \end{center}
+% \end{figure}
+
+% \item Usando el software STATA, realice la estimaci\'{o}n de la siguiente ecuaci\'{o}n de OLS de los salarios:
+
+
+\end{itemize}
+
+}
+
+\frame{\frametitle{Introducción}
+
+
+
+\input{../Tablas/T_1_stata.tex}
+
+
+	\begin{itemize}
+	\pause
+
+	\item Alrededor de 28 \% de los trabajadores son mujeres.
+
+	\item En promedio, la experiencia de los trabajadores es de 47 años y sus años de educación son de 9 años.
+	
+	\item El 66 \% de los trabajadores tiene una condición civil : con pareja.
+
+%	\pause
+
+%	\item Todas las variables dummy son codificadas como 0 o 1 
+
+%	\pause
+
+%	\item No se informan valores negativos inverosímiles para ninguna de las variables explicativas continuas (por ejemplo, educación o edad).
+
+		
+	\end{itemize}
+ 
+}
+
+\frame{\frametitle{Introducción}
+	\begin{itemize}
+\pause
+\item Se realizará la estimación de la ecuación de salarios de los trabajadores peruanos utilizando la información 2020 (ENAHO)
+
+\pause
+\item Para realizar el análisis se propone tres ecuaciones:
+
+\begin{align*}
+& &  		&\ln wage_{i} = \alpha_{0}+\alpha_{1} reduca_{i} + \mu_{i} & (1) \\
+\\
+& &  		&\ln wage_{i} = \alpha_{0}+\alpha_{1} reduca_{i}+\pi mujer_{i}  \\
+& & &   +\alpha_{2}redad_{i} + \alpha_{3}redad^{2}_{i} +\alpha_{4} rpareja_{i} + \mu_{i}& (2) \\
+\\
+& &  		&\ln wage_{i} = \alpha_{0}+\alpha_{1} reduca_{i}+\pi mujer_{i} \\
+& & &  + \alpha_{2}redad_{i} + \alpha_{3}redad^{2}_{i} +\alpha_{4} rpareja_{i} + \sum^{25}_{i=2} \lambda_{i} dpto_{i} +\mu_{i}& (3) \\
+\end{align*}
+
+% \begin{equation}
+% \logr6_{i}= \beta_{0}+\beta_{1}neduca_{i}+\mu_{i}   
+% \end{equation}
+ 
+% \begin{equation}
+% logr6_{i}= \beta_{0}+\beta_{1}neduca_{i}+\phi mujer_{i}+\beta_{2}exper_{i} +\beta_{3}expersq_{i} +\beta_{4}civil_{i}+%\mu_{i}   
+% \end{equation}
+
+% \begin{equation}
+% logr6_{i}= \beta_{0}+\beta_{1}neduca_{i}+\phi mujer_{i}+ \beta_{2}exper_{i} +\beta_{3}expersq_{i} +\beta_{4}civil_{i} \\\ +\sum^{25}_{i=2} \lambda_{i} dpto_{i} +\mu_{i}   
+ %\end{equation}
+
+
+	\end{itemize}
+
+}
+
+\section{Pregunta 1}
+\frame{\frametitle{Pregunta 1}
+	\begin{itemize}
+	\item[1] Estime la regresi\'{o}n de la ecuaci\'{o}n 2 usando OLS. Programación en STATA  
+	\begin{itemize}
+	\item Use el nivel de significancia de 0.05 para testear la presencia de heterocedasticidad. 
+	\item ¿Qu\'{e} es lo que usted concluye?
+	\end{itemize}
+	
+	\end{itemize}
+}
+
+
+% 	\item Use el comando \textcolor{blue}{robust} para corregir la heterocedasticidad y re-estime la regresi\'{o}n del modelo 1. Ahora responda las siguientes dos preguntas:
+
+% \begin{enumerate}
+% \item Usando los comandos para testear el test de Wald en STATA (el cual ha sido proveida en el dofile), realice el test de la siguiente proposici\'{o}n usando el nivel de significancia de 0.05 e interprete los resultados:
+% \begin{center}
+% $H_{o}: \gamma_{5}=\gamma_{6}=0 $ versus $H_{a}: H_{o}$ es falsa
+% \end{center}
+
+% \item Realice el mismo test bajo ma misma restricci\'{o}n en a) usando el comando \textbf{test} en STATA. Explique las diferencias observadas.
+
+% \end{enumerate}
+% 	
+% 	\end{enumerate}
+% }
+
+
+
+
+
+\frame{\frametitle{Pregunta 1}
+
+\input{../Tablas/T_3_stata.tex}
+
+}
+
+%\frame{\frametitle{Pregunta 1}
+
+%\lstinputlisting[caption={\mcode{Dofile.do}},firstline=50, lastline=59]{_S1_EE_solucion_excel.do}
+
+%}
+
+\frame{\frametitle{Pregunta 1}
+
+
+\begin{columns}
+	\begin{column}{0.48\textwidth}
+
+\begin{center}
+\textbf{Figura 1}: 
+\end{center}
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=5cm,width=5cm]{../Imagen/t1.png}
+	\end{center}
+	\end{figure}
+
+
+%	\lstinputlisting[caption={\mcode{Dofile.do}},firstline=6, lastline=19]{../Sesion1/Session-1-Enaho.do}
+
+	\end{column}
+    \begin{column}{0.48\textwidth}
+   
+	\begin{itemize}
+	\pause
+
+	\item La distribución es muy puntiaguda con colas más alargadas en comparación con una distribución normal.
+	
+	\pause
+
+	\item La prueba confirma que las dos proposiciones clave que gobiernan la normalidad (es decir, simetría y mesokurtosis) son ambas decididamente rechazadas por los datos en este caso.
+	
+	\end{itemize}
+
+    \end{column}
+\end{columns}
+
+
+}
+
+\frame{\frametitle{Pregunta 1}
+
+
+\begin{columns}
+	\begin{column}{0.48\textwidth}
+
+\begin{center}
+\textbf{Figura 1}: 
+\end{center}
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=5cm,width=5cm]{../Imagen/t1.png}
+	\end{center}
+	\end{figure}
+
+
+%	\lstinputlisting[caption={\mcode{Dofile.do}},firstline=6, lastline=19]{../Sesion1/Session-1-Enaho.do}
+
+	\end{column}
+    \begin{column}{0.48\textwidth}
+   
+\begin{center}
+\textbf{Figura 2}: 
+\end{center}
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=5cm,width=5cm]{../Imagen/t2.png}
+	\end{center}
+	\end{figure}
+
+    \end{column}
+\end{columns}
+
+
+}
+
+%\frame{\frametitle{Pregunta 1}
+
+%\lstinputlisting[caption={\mcode{Dofile.do}},firstline=60, lastline=75]{_S1_EE_solucion_excel.do}
+
+%}
+
+
+\frame{\frametitle{Pregunta 1}
+
+\begin{itemize}
+
+\item ¿Cuál es la diferencia entre los test Breusch-Pagan/Cook-Weisberg y el test de White/Koenker ?
+
+\item El Breusch-Pagan/Cook-Weisberg test  asume que los errores de la ecuación original se distribuyen de manera normal.
+
+\item Por otro lado, el test de White/Koenker solo asume que los errores de la ecuación original son identica e independientemente distribuidos (i.i.d).
+
+\item Por lo tanto, es útil probar los residuos del modelo de regresión de la ecuación original para determinar la \textbf{normalidad} para decidir cuál de estas pruebas de heterocedasticidad usar.
+
+\item El comando relevante en STATA, dada la normalidad es violada, es:  
+
+\begin{center}
+\textcolor{red}{$hettest$ $mujer$ $neduca$ $exper$ $expersq$ $civil$}, $iid$
+\end{center}
+
+\end{itemize}
+
+}
+
+\frame{\frametitle{Pregunta 1}
+
+\begin{itemize}
+\item El test de Koenker/White heteroscedasticity requiere la estimación del siguiente modelo de regresión auxiliar :
+
+%\begin{equation}
+%sq resids_{i} = \delta_{0} +\delta_{1}neduca_{i}+ \phi mujer_{i}+\delta_{2}exper_{i}+\delta_{3}exper^{2}_{i}+\\\
+%+ \delta_{4}civil_{i}  +\xi_{i}  
+%\end{equation}
+
+\begin{align*}
+& \varepsilon^{2}_{i} = \delta_{0} +\delta_{1}reduca_{i}+ \phi rmujer_{i}+\delta_{2}redad_{i}+\delta_{3}redad^{2}_{i}+ \delta_{4}rpareja_{i}  +\xi_{i} & (4) \\
+\end{align*}
+
+\item Hipotesis
+\begin{center}
+$H_{o}$: $\delta_{0}=\delta_{1} = \phi =\delta_{2} = \delta_{3} = \delta_{4}   =0$ \\\
+vs
+$H_{a}$: $H_{o}$ no es verdad
+\end{center}
+
+\item Bajo la hipotesisi Nula , el test de LM es definido como 
+
+\begin{center}
+$n$ x $R^{2}$  $\sim \chi^{2}_{k-1} $ 
+\end{center}
+
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=2cm,width=8cm]{../Imagen/t4.png}
+	\end{center}
+	\end{figure}
+
+\pause
+\item	\textcolor{red}{La hipotesis nula de homocedasticidad tendra que ser analizada para el modelo de log(wage)}
+
+\end{itemize}
+
+}
+
+%\frame{\frametitle{Pregunta 1}
+
+%\lstinputlisting[caption={\mcode{Dofile.do}},firstline=74, lastline=88]{_S1_EE_solucion_excel.do}
+
+%}
+
+\frame{\frametitle{Pregunta 1}
+
+
+\begin{columns}
+	\begin{column}{0.48\textwidth}
+
+
+\input{../Tablas/T_4_stata.tex}
+
+%	\lstinputlisting[caption={\mcode{Dofile.do}},firstline=6, lastline=19]{../Sesion1/Session-1-Enaho.do}
+
+	\end{column}
+    \begin{column}{0.48\textwidth}
+   
+	\begin{itemize}
+	\pause
+	\item Por tanto, $n$ x $R^{2}$ es igual a $24,774$
+	\pause
+	\item Dado un valor de significancia de $0.05$, la distribución de la tabla $\chi^{2}_{k-1}$ arroja el valor de $11.07$ ($\chi^{2}_{5}$)
+	\pause
+	\item Evidenciando que se rehaza la $H_{o}$(homocedasticidad)
+	\pause
+	\item Concluyendo que existe presencia de \textbf{heterocedasticidad}
+	\pause
+	\item	\textcolor{red}{Se necesita corregir la matriz de varianza-covarianza usando la opción robust antes del análisis}
+	\end{itemize}
+
+    \end{column}
+\end{columns}
+
+
+}
+
+
+\section{Pregunta 2}
+\frame{\frametitle{Pregunta 2}
+	\begin{itemize}
+\item[2] Use el comando robust para corregir la presencia de heterocedasticidad y re-estime el modelo (2). Luego responda las siguientes preguntas
+
+	\begin{enumerate}
+	\item Use la estructura del Test de Wald, realice usando un nivel de significancia de 0.05 para testear:
+
+$$
+H_{o}:\alpha_{4}= \pi=0  
+$$
+ 
+	\item Utilizando el Test de Wald en STATA, Python (test), ¿Qu\'{e} es lo que usted concluye?
+	\end{enumerate}
+	
+	\end{itemize}
+}
+
+\frame{\frametitle{Pregunta 2}
+
+\begin{itemize}
+\item Según el modelo :
+
+%$$
+% logr6_{i}= \beta_{0}+\beta_{1}neduca_{i}+\phi mujer_{i}+\beta_{2}exper_{i} +\beta_{3}expersq_{i} +\beta_{4}civil_{i}+\mu_{i}   
+%$$
+
+\begin{align*}
+& \log r6_{i}= \alpha_{0}+\alpha_{1}reduca_{i}+\pi rmujer_{i}+\alpha_{2} redad_{i} +\alpha_{3}redadsq_{i} +\alpha_{4}rpareja_{i}+\mu_{i}  \\
+\end{align*}
+
+\input{../Tablas/T_4a_stata.tex}
+
+
+\end{itemize}
+}
+
+
+
+
+\frame{\frametitle{Pregunta 2}
+
+\begin{itemize}
+
+\item La hipotesis nula es expresada como:
+
+$$
+H_{o}:\alpha_{4}=\pi=0  
+$$
+
+$$
+H_{a}:H_{o}-no-verdad  
+$$
+
+\item La matriz de la forma del test de Wald es especificado como:
+
+$$
+Wald = \begin{bmatrix}
+(\hat{\alpha }_{4}-\alpha_{4}) & (\hat{\pi } -\pi) \\
+\end{bmatrix}  \hat{V}_{robust}^{-1} \begin{bmatrix}
+(\hat{\alpha }_{4}-\alpha_{4}) & (\hat{\pi }-\pi) \\
+\end{bmatrix}' 
+$$
+
+\item El test de Wald implementa las restricciones de la $H_{o}$
+$$
+Wald = \begin{bmatrix}
+\hat{\alpha }_{4} & \hat{\pi } \\
+\end{bmatrix}  \hat{V}_{robust}^{-1} \begin{bmatrix}
+\hat{\alpha }_{4} & \hat{\pi } \\
+\end{bmatrix}' 
+$$
+
+\item El valor del test de Wald para una significancia conjunta de los dos coeficientes es \textbf{934.1019} dado una distribución de chi-cuadrado con \textbf{2} grados de libertad de \textbf{5.99} (ver tabla de distribucion de una $\chi^{2}$)
+
+\begin{itemize}
+\item STATA : 646.08286
+\item Python : 934.1019
+\end{itemize}
+
+\end{itemize}
+}
+
+%\frame{\frametitle{Pregunta 2}
+
+
+%\begin{stlog}
+%\centering
+%\fontsize{6}{6}\selectfont
+%\input{../Tablas/resultados_1a.log}
+%\end{stlog}
+
+%}
+
+
+%\frame{\frametitle{Pregunta 2}
+
+
+%\begin{stlog}
+%\centering
+%\fontsize{6}{6}\selectfont
+%\input{../Tablas/resultados_1b.log}
+%\end{stlog}
+
+%}
+
+\section{Pregunta 3}
+
+\frame{\frametitle{Pregunta 3}
+	\begin{itemize}
+\item[2] Usando el t-test asint\'{o}tico y al nivel de significancia de 0.05 se le pide testear la proposici\'{o}n: el log de salario alcanza un maximo alrededor de 50 a\~{n}os. Reporte todos los cálculos relevantes. ¿Qu\'{e} es lo que usted concluye? 
+
+
+	\end{itemize}
+	
+}
+
+\frame{\frametitle{Pregunta 3}
+
+\input{../Tablas/T_5_stata.tex}
+
+}
+
+
+
+\frame{\frametitle{Pregunta 3}
+
+\begin{itemize}
+
+\item La derivada obtenida , esta determinada como:
+
+$$
+\frac{\partial \log (wage) }{\partial redad} =\hat{\beta}_{2}+2 \hat{\beta}_{3} redad
+$$
+
+\item El punto de estado estacionario es cálculado al igualar en cero la derivada obtenida  y despejar el valor de la variable $exper$
+
+\item Para la presente aplicación, se tiene:
+
+$$
+redad_{estacionario} =\frac{\hat{\beta}_{2}}{-2 \hat{\beta}_{3}} = \frac{0.095}{2 x(-0.001)}=43 = \hat{\bigtriangleup}
+$$
+
+\item Por tanto, deseamos testear la proposión planetada a través de la hipoteisis
+
+\begin{center}
+$H_{o}: \bigtriangleup=50 $ vs $H_{a}: \bigtriangleup \neq 50$
+\end{center}
+
+\end{itemize}
+
+}
+
+\frame{\frametitle{Pregunta 3}
+
+\begin{itemize}
+\item Usando el \textbf{Metodo Delta}, la varianza muestral esta dado por:
+
+%$$
+%Var \left( \hat{\bigtriangleup}\right) = \left( \frac{\partial \hat{\bigtriangleup}}{\partial \hat{\gamma}}_{2} \right)^{2} Var \left( \hat{\gamma}_{2}\right) + \left( \frac{\partial \hat{\bigtriangleup}}{\partial \hat{\gamma}}_{3} \right)^{2} Var \left( \hat{\gamma}_{3}\right) \cdots
+%$$ 
+
+%$$
+%= \cdots + 2 \left( \frac{\partial \hat{\bigtriangleup}}{\partial \hat{\gamma}}_{2} \right) \left( \frac{\partial \hat{\bigtriangleup}}{\partial \hat{\gamma}}_{3} \right) Cov \left(\hat{\gamma}_{2}, \hat{\gamma}_{3} \right)
+%$$
+
+\begin{align*}
+&  Var \left( \hat{\bigtriangleup}\right) = \left( \frac{\partial \hat{\bigtriangleup}}{\partial \hat{\gamma}}_{2} \right)^{2} Var \left( \hat{\gamma}_{2}\right) + \left( \frac{\partial \hat{\bigtriangleup}}{\partial \hat{\gamma}}_{3} \right)^{2} Var \left( \hat{\gamma}_{3}\right) \\
+& + 2 \left( \frac{\partial \hat{\bigtriangleup}}{\partial \hat{\gamma}}_{2} \right) \left( \frac{\partial \hat{\bigtriangleup}}{\partial \hat{\gamma}}_{3} \right) Cov \left(\hat{\gamma}_{2}, \hat{\gamma}_{3} \right) & &  \\
+\end{align*}
+
+\item Recordando:
+
+$$
+\hat{\bigtriangleup}= - \frac{\hat{\gamma}_{2}}{2 \hat{\gamma}_{3}}
+$$
+
+\item Donde, para el presente caso:
+
+\pause
+$$
+\frac{\hat{\partial \bigtriangleup}}{\partial \hat{\gamma}_{2}}= - \frac{1}{2 \hat{\gamma}_{3}}
+$$
+
+\pause
+
+$$
+\frac{\hat{\partial \bigtriangleup}}{\partial \hat{\gamma}_{3}}=  \frac{\hat{\gamma}_{2}}{2 \hat{\gamma}^{2}_{3}}
+$$
+
+
+\end{itemize}
+
+}
+
+\frame{\frametitle{Pregunta 3}
+
+\begin{itemize}
+\item El valor de las derivadas encontradas son calculadas:
+
+
+\pause
+$$
+\frac{\hat{\partial \bigtriangleup}}{\partial \hat{\beta}_{2}}= - \frac{1}{2 \hat{\beta}_{3}}=452.16
+$$
+
+\pause
+$$
+\frac{\hat{\partial \bigtriangleup}}{\partial \hat{\beta}_{3}}= - \frac{\hat{\beta}_{2}}{2 \hat{\beta}^{2}_{3}}=39031.71
+$$
+
+\item Los elementos obtenidos a través de la \textbf{robust} de la matriz de varianza-covarianza son:
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=4cm,width=8cm]{../Imagen/Seminario_9.png}
+	\end{center}
+	\end{figure}
+
+
+\end{itemize}
+
+}
+
+
+\frame{\frametitle{Pregunta 3}
+
+\begin{itemize}
+
+\item Los elementos obtenidos a través de la \textbf{robust} de la matriz de varianza-covarianza son:
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=4cm,width=8cm]{../Imagen/Seminario_9.png}
+	\end{center}
+	\end{figure}
+
+\item Donde:
+
+$$
+Var(\hat{\beta }_{2} )=2.6226714554508038e-05 = 0.000026226
+$$
+
+$$
+Var(\hat{\beta }_{3} )=3.099567058003456e-09 = 0.000000003099
+$$
+
+$$
+Cov(\hat{\beta }_{2},\hat{\beta }_{3} )= -2.8239486279027537e-07 =-0.0000002823
+$$
+
+\end{itemize}
+}
+
+
+\frame{\frametitle{Pregunta 3}
+
+\begin{itemize}
+
+\item Por tanto, la varianza muestral es calculada reemplazando en el método delta:
+
+$$
+Var \left( \hat{\bigtriangleup} \right) = \left( 452.16  \right)^{2} x 0.000026226 + \left(39031.71 \right)^{2} x 0.000000003099 + \cdots
+$$
+
+$$
+= \cdots + 2 x \left( 452.16  x 39031.71 \right) \left(-0.0000002823 \right) \equiv 0.1164
+$$
+
+\item Nosotros deseamos testear la hipotesis:
+
+\begin{center}
+$H_{o}: \bigtriangleup=50 $ vs $H_{a}: \bigtriangleup \neq 50$
+\end{center}
+
+\item El test-t es expresado en el presente caso como:
+
+$$
+t=\frac{ \hat{\bigtriangleup}-\bigtriangleup}{\sqrt{var (\bigtriangleup)}}=\frac{43-50}{\sqrt{0.1164}}=-20.51 \sim  t_{\infty}
+$$
+
+\item \textbf{Dado el valor critico de $\pm 1.96$, por tanto  se puede rechazar la hipotesis nula }:
+
+$$
+\mid  -20.57 \mid   > \mid  -1.96 \mid  \Rightarrow \mid  t_{value} \mid  > \mid  t_{critico} \mid 
+$$
+
+\item Qu\'{e} concluye?
+
+\end{itemize}
+
+}
+
+\frame{\frametitle{Pregunta 3}
+
+	\begin{center}
+	\textcolor{blue}{Figura }: Perfil de salarios-edad para empleados de Perú
+	\end{center}
+	
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics [height=6cm,width=7cm]{../Imagen/t3.png}
+	\end{center}
+	\end{figure}
+	
+}
+
+
+
+\end{document}
